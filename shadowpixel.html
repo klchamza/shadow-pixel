@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShadowPixel — Hamza Hack Team</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
+
+:root {
+  --green: #00ff88;
+  --green-dim: #00cc6a;
+  --green-dark: #003d1f;
+  --green-glow: rgba(0,255,136,0.15);
+  --red: #ff3366;
+  --amber: #ffaa00;
+  --bg: #030a06;
+  --bg2: #060f08;
+  --bg3: #0a1a0d;
+  --border: rgba(0,255,136,0.2);
+  --border-bright: rgba(0,255,136,0.5);
+  --text: #b0ffcc;
+  --text-dim: #5a8a6a;
+  --mono: 'Share Tech Mono', monospace;
+  --display: 'Orbitron', monospace;
+  --body: 'Exo 2', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* grid arka plan */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* scan line */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ HEADER ═══ */
+header {
+  padding: 2.5rem 0 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.logo {
+  font-family: var(--display);
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  text-shadow: 0 0 30px rgba(0,255,136,0.4);
+  line-height: 1;
+}
+
+.logo span { color: #fff; }
+
+.tagline {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+.team-badge {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--amber);
+  border: 1px solid rgba(255,170,0,0.3);
+  padding: 3px 12px;
+  letter-spacing: 0.15em;
+}
+
+/* ═══ TABS ═══ */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.tab:hover { color: var(--green); }
+
+.tab.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  background: var(--green-glow);
+}
+
+/* ═══ PANEL ═══ */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ═══ KART ═══ */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--green);
+  opacity: 0.5;
+}
+
+.card-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--green);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ═══ FORM ═══ */
+.field { margin-bottom: 1.1rem; }
+
+label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+label .hint {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  opacity: 0.7;
+  margin-left: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+input[type=text], input[type=password], input[type=number], textarea, select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 0.6rem 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--green-dim);
+  background: rgba(0,255,136,0.05);
+}
+
+textarea { resize: vertical; min-height: 90px; }
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ff88' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 2rem;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* upload zone */
+.upload-zone {
+  border: 1px dashed var(--border-bright);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  background: var(--bg3);
+}
+
+.upload-zone:hover, .upload-zone.drag { 
+  border-color: var(--green); 
+  background: var(--green-glow);
+}
+
+.upload-zone input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--green);
+  opacity: 0.6;
+}
+
+.upload-text {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.upload-preview {
+  display: none;
+  margin-top: 1rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.upload-preview.show { display: flex; }
+
+.preview-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.preview-info {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.preview-info strong { color: var(--green); }
+
+/* toggle switch */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.toggle input { display: none; }
+
+.toggle-track {
+  position: absolute; inset: 0;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--green-dark);
+  border-color: var(--green);
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 12px; height: 12px;
+  background: var(--text-dim);
+  transition: all 0.2s;
+}
+
+.toggle input:checked + .toggle-track::after {
+  left: 23px;
+  background: var(--green);
+}
+
+.toggle-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.toggle-label strong { color: var(--text); }
+.toggle-label small { display: block; font-size: 0.65rem; opacity: 0.7; margin-top: 2px; }
+
+/* ═══ BUTON ═══ */
+.btn {
+  font-family: var(--display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border: 1px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s;
+  z-index: 0;
+}
+
+.btn:hover::before { transform: scaleX(1); }
+.btn:hover { color: var(--bg); }
+.btn span { position: relative; z-index: 1; }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-danger { border-color: var(--red); color: var(--red); }
+.btn-danger::before { background: var(--red); }
+.btn-danger:hover { color: #fff; }
+
+/* ═══ LOG / OUTPUT ═══ */
+.log {
+  background: #000;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  min-height: 100px;
+  max-height: 250px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+
+.log-line { display: block; }
+.log-line.ok { color: var(--green); }
+.log-line.err { color: var(--red); }
+.log-line.info { color: var(--amber); }
+.log-line.dim { color: var(--text-dim); }
+
+/* download alanı */
+.download-area {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--green-dim);
+  background: var(--green-glow);
+  text-align: center;
+}
+
+.download-area.show { display: block; }
+
+.download-area a {
+  font-family: var(--display);
+  font-size: 0.75rem;
+  color: var(--green);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+}
+
+/* mesaj çıktısı */
+.msg-output {
+  display: none;
+  margin-top: 1rem;
+}
+
+.msg-output.show { display: block; }
+
+.msg-box {
+  background: #000;
+  border: 1px solid var(--green);
+  padding: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--green);
+  word-break: break-all;
+  line-height: 1.7;
+}
+
+/* ═══ AI CHAT ═══ */
+.chat-window {
+  background: #000;
+  border: 1px solid var(--border);
+  height: 420px;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scroll-behavior: smooth;
+}
+
+.chat-msg {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  max-width: 85%;
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.9rem;
+  color: var(--text);
+}
+
+.chat-msg.ai {
+  align-self: flex-start;
+  color: var(--green);
+  border-left: 2px solid var(--green);
+  padding-left: 0.75rem;
+}
+
+.chat-msg.ai .ai-prefix {
+  color: var(--amber);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0;
+  margin-top: 1rem;
+}
+
+.chat-input-row input {
+  flex: 1;
+  border-right: none;
+}
+
+.chat-send {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  padding: 0 1.2rem;
+  background: var(--green);
+  border: 1px solid var(--green);
+  color: var(--bg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.chat-send:hover { background: var(--green-dim); }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.typing {
+  display: none;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  padding: 0.3rem 0;
+}
+
+.typing.show { display: block; }
+
+/* api key girişi */
+.api-notice {
+  background: rgba(255,170,0,0.08);
+  border: 1px solid rgba(255,170,0,0.3);
+  padding: 0.8rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--amber);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+/* progress bar */
+.progress-bar {
+  display: none;
+  height: 2px;
+  background: var(--border);
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.progress-bar.show { display: block; }
+
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* responsive */
+@media (max-width: 600px) {
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .logo { font-size: 1.8rem; }
+  .tab { padding: 0.6rem 0.8rem; font-size: 0.68rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">Shadow<span>Pixel</span></div>
+    <div class="tagline">LSB Steganografi · Piksel Bazlı Mesaj Gizleme</div>
+    <div class="team-badge">⬡ Hamza Hack Team — v2.0</div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('encode')">[ Encode ]</button>
+    <button class="tab" onclick="switchTab('decode')">[ Decode ]</button>
+    <button class="tab" onclick="switchTab('kapasite')">[ Kapasite ]</button>
+    <button class="tab" onclick="switchTab('ai')">[ CyberWordAI ]</button>
+  </div>
+
+  <!-- ════ ENCODE PANELİ ════ -->
+  <div id="panel-encode" class="panel active">
+
+    <div class="card">
+      <div class="card-title">// Kaynak Resim</div>
+      <div class="upload-zone" id="enc-zone">
+        <input type="file" id="enc-file" accept="image/*" onchange="handleEncImg(this)">
+        <span class="upload-icon">▣</span>
+        <div class="upload-text">PNG veya JPEG sürükle / tıkla</div>
+      </div>
+      <div class="upload-preview" id="enc-preview">
+        <img class="preview-img" id="enc-thumb">
+        <div class="preview-info" id="enc-info"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">// Gizlenecek Mesaj</div>
+      <div class="field">
+        <label>Mesaj</label>
+        <textarea id="enc-msg" placeholder="Buraya gizlemek istediğin metni yaz..."></textarea>
+      </div>
+      <div class="field">
+        <label>Çıkış Dosyası Adı <span class="hint">.png otomatik eklenir</span></label>
+        <input type="text" id="enc-outname" value="gizli_resim" placeholder="dosya_adi">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">// Güvenlik Parametreleri</div>
+
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="enc-use-sifre" onchange="toggleSifre()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--sifre · AES-256 Şifreleme</strong>
+          <small>Mesajı AES-256-CBC ile şifreler. En güçlü koruma — parolasız asla açılamaz.</small>
+        </div>
+      </div>
+      <div id="sifre-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="password" id="enc-sifre" placeholder="AES şifre parolası...">
+      </div>
+
+      <div class="toggle-row" style="margin-top:0.8rem;">
+        <label class="toggle">
+          <input type="checkbox" id="enc-use-parola" onchange="toggleParola()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--parola · Hash Kilitleme</strong>
+          <small>Mesajı şifrelemez, sadece parola doğrulaması ekler. Kurulum gerektirmez.</small>
+        </div>
+      </div>
+      <div id="parola-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="password" id="enc-parola" placeholder="Parola...">
+      </div>
+
+      <div class="toggle-row" style="margin-top:0.8rem;">
+        <label class="toggle">
+          <input type="checkbox" id="enc-use-seed" onchange="toggleSeed()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--seed · Rastgele Piksel Dağılımı</strong>
+          <small>Mesaj bitlerini tüm resme rastgele dağıtır. Sıralı gömmeyi tahmin edilemez yapar.</small>
+        </div>
+      </div>
+      <div id="seed-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="number" id="enc-seed" placeholder="Seed sayısı (örn: 73920418)" min="0">
+      </div>
+
+      <div class="grid2" style="margin-top:1rem;">
+        <div class="field">
+          <label>--kanal · Renk Kanalı</label>
+          <select id="enc-kanal">
+            <option value="all">Hepsi (R+G+B) — Varsayılan</option>
+            <option value="r">Sadece Kırmızı (R)</option>
+            <option value="g">Sadece Yeşil (G) — Önerilen</option>
+            <option value="b">Sadece Mavi (B)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>--bit · Bit Derinliği</label>
+          <select id="enc-bit">
+            <option value="1">1 bit — Gizlilik (Varsayılan)</option>
+            <option value="2">2 bit — 2x Kapasite</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="doEncode()"><span>▶ Mesajı Resme Göm</span></button>
+
+    <div class="progress-bar" id="enc-progress"><div class="progress-fill" id="enc-fill"></div></div>
+
+    <div class="log" id="enc-log" style="margin-top:1rem;">
+      <span class="log-line dim">// ShadowPixel encode motoru hazır...</span>
+    </div>
+
+    <div class="download-area" id="enc-download">
+      <div style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); margin-bottom:0.5rem;">✓ İŞLEM TAMAMLANDI</div>
+      <a id="enc-dl-link" download>⬇ Resmi İndir</a>
+    </div>
+
+  </div>
+
+  <!-- ════ DECODE PANELİ ════ -->
+  <div id="panel-decode" class="panel">
+
+    <div class="card">
+      <div class="card-title">// Gizli Resim</div>
+      <div class="upload-zone" id="dec-zone">
+        <input type="file" id="dec-file" accept="image/*" onchange="handleDecImg(this)">
+        <span class="upload-icon">▣</span>
+        <div class="upload-text">Gizli mesaj içeren PNG sürükle / tıkla</div>
+      </div>
+      <div class="upload-preview" id="dec-preview">
+        <img class="preview-img" id="dec-thumb">
+        <div class="preview-info" id="dec-info"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">// Decode Parametreleri</div>
+      <div style="font-family:var(--mono); font-size:0.72rem; color:var(--amber); margin-bottom:1rem; padding:0.6rem; border:1px solid rgba(255,170,0,0.2); background:rgba(255,170,0,0.05);">
+        ⚠ Encode'da hangi parametreleri kullandıysan burada da aynılarını seçmelisin!
+      </div>
+
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="dec-use-sifre" onchange="toggleDecodeSifre()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--sifre · AES Şifreli</strong>
+          <small>Encode'da --sifre kullandıysan aynı parolayla çöz</small>
+        </div>
+      </div>
+      <div id="dec-sifre-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="password" id="dec-sifre" placeholder="AES parolası...">
+      </div>
+
+      <div class="toggle-row" style="margin-top:0.8rem;">
+        <label class="toggle">
+          <input type="checkbox" id="dec-use-parola" onchange="toggleDecodeParola()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--parola · Parola Korumalı</strong>
+          <small>Encode'da --parola kullandıysan aynı parola ile aç</small>
+        </div>
+      </div>
+      <div id="dec-parola-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="password" id="dec-parola" placeholder="Parola...">
+      </div>
+
+      <div class="toggle-row" style="margin-top:0.8rem;">
+        <label class="toggle">
+          <input type="checkbox" id="dec-use-seed" onchange="toggleDecodeSeed()">
+          <div class="toggle-track"></div>
+        </label>
+        <div class="toggle-label">
+          <strong>--seed · Rastgele Dağıtılmış</strong>
+          <small>Encode'da --seed kullandıysan aynı seed'i gir</small>
+        </div>
+      </div>
+      <div id="dec-seed-field" class="field" style="display:none; margin-left:3.5rem;">
+        <input type="number" id="dec-seed" placeholder="Seed sayısı..." min="0">
+      </div>
+
+      <div class="grid2" style="margin-top:1rem;">
+        <div class="field">
+          <label>--kanal</label>
+          <select id="dec-kanal">
+            <option value="all">Hepsi (R+G+B)</option>
+            <option value="r">Sadece R</option>
+            <option value="g">Sadece G</option>
+            <option value="b">Sadece B</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>--bit</label>
+          <select id="dec-bit">
+            <option value="1">1 bit</option>
+            <option value="2">2 bit</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="doDecode()"><span>▶ Mesajı Çıkar</span></button>
+
+    <div class="log" id="dec-log" style="margin-top:1rem;">
+      <span class="log-line dim">// Decode motoru hazır...</span>
+    </div>
+
+    <div class="msg-output" id="dec-output">
+      <div class="card-title" style="margin-top:1rem;">// Bulunan Mesaj</div>
+      <div class="msg-box" id="dec-msg-box"></div>
+    </div>
+
+  </div>
+
+  <!-- ════ KAPASİTE PANELİ ════ -->
+  <div id="panel-kapasite" class="panel">
+
+    <div class="card">
+      <div class="card-title">// Resim Seç</div>
+      <div class="upload-zone" id="kap-zone">
+        <input type="file" id="kap-file" accept="image/*" onchange="handleKapImg(this)">
+        <span class="upload-icon">▣</span>
+        <div class="upload-text">PNG veya JPEG sürükle / tıkla</div>
+      </div>
+      <div class="upload-preview" id="kap-preview">
+        <img class="preview-img" id="kap-thumb">
+        <div class="preview-info" id="kap-info"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">// Parametreler</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Kanal</label>
+          <select id="kap-kanal" onchange="calcKapasite()">
+            <option value="all">Hepsi (R+G+B)</option>
+            <option value="r">Sadece R</option>
+            <option value="g">Sadece G</option>
+            <option value="b">Sadece B</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bit Derinliği</label>
+          <select id="kap-bit" onchange="calcKapasite()">
+            <option value="1">1 bit</option>
+            <option value="2">2 bit</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="kap-result" style="display:none;">
+      <div class="card-title">// Kapasite Analizi</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; text-align:center;">
+        <div style="padding:1rem; border:1px solid var(--border); background:var(--bg3);">
+          <div style="font-family:var(--mono); font-size:0.65rem; color:var(--text-dim); margin-bottom:0.5rem;">TOPLAM PİKSEL</div>
+          <div style="font-family:var(--display); font-size:1.3rem; color:var(--green);" id="kap-px">-</div>
+        </div>
+        <div style="padding:1rem; border:1px solid var(--border); background:var(--bg3);">
+          <div style="font-family:var(--mono); font-size:0.65rem; color:var(--text-dim); margin-bottom:0.5rem;">MAX BİT</div>
+          <div style="font-family:var(--display); font-size:1.3rem; color:var(--green);" id="kap-bit-out">-</div>
+        </div>
+        <div style="padding:1rem; border:1px solid var(--border); background:var(--bg3);">
+          <div style="font-family:var(--mono); font-size:0.65rem; color:var(--text-dim); margin-bottom:0.5rem;">MAX KARAKTER</div>
+          <div style="font-family:var(--display); font-size:1.3rem; color:var(--amber);" id="kap-char">-</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem; font-family:var(--mono); font-size:0.7rem; color:var(--text-dim);">
+        Formül: (piksel × kanal_sayısı × bit_derinliği − 32) ÷ 8 = max karakter
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════ AI PANELİ ════ -->
+  <div id="panel-ai" class="panel">
+
+    <div class="api-notice">
+      ⚡ CyberWordAI — Groq API üzerinde çalışır (llama-3.3-70b-versatile)<br>
+      Hamza Hack Team tarafından geliştirilmiştir. Sadece ShadowPixel konularında uzman.<br>
+    </div>
+
+    <div class="card">
+      <div class="card-title">// CyberWordAI Terminal</div>
+
+      <div class="chat-window" id="chat-window">
+        <div class="chat-msg ai">
+          <span class="ai-prefix">CYBERWORDAI // HAMZA HACK TEAM</span>
+          Selam! Ben CyberWordAI. ShadowPixel uygulaması ve LSB steganografi konusunda her şeyi biliyorum. Ne sormak istiyorsun?
+        </div>
+      </div>
+
+      <div class="typing" id="typing-indicator">▌ CyberWordAI yazıyor...</div>
+
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Sor: encode nasıl çalışır? seed nedir? AES farkı nedir?..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">GÖNDER ▶</button>
+      </div>
+
+      <div style="margin-top:0.8rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <button onclick="quickAsk('LSB mantığı nedir?')" style="font-family:var(--mono); font-size:0.65rem; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer;">LSB nedir?</button>
+        <button onclick="quickAsk('AES şifreleme nasıl çalışır?')" style="font-family:var(--mono); font-size:0.65rem; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer;">AES nasıl çalışır?</button>
+        <button onclick="quickAsk('seed parametresi ne işe yarar?')" style="font-family:var(--mono); font-size:0.65rem; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer;">seed nedir?</button>
+        <button onclick="quickAsk('encode ve decode nasıl yapılır, örnek ver')" style="font-family:var(--mono); font-size:0.65rem; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer;">nasıl kullanılır?</button>
+        <button onclick="quickAsk('--kanal ve --bit parametrelerini açıkla')" style="font-family:var(--mono); font-size:0.65rem; padding:4px 10px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer;">kanal & bit</button>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ══════════════════════════════════════════════
+//  TAB YÖNETİMİ
+// ══════════════════════════════════════════════
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  TOGGLE'LAR
+// ══════════════════════════════════════════════
+
+function toggleSifre() {
+  const on = document.getElementById('enc-use-sifre').checked;
+  document.getElementById('sifre-field').style.display = on ? 'block' : 'none';
+  if (on) { document.getElementById('enc-use-parola').checked = false; toggleParola(); }
+}
+function toggleParola() {
+  const on = document.getElementById('enc-use-parola').checked;
+  document.getElementById('parola-field').style.display = on ? 'block' : 'none';
+  if (on) { document.getElementById('enc-use-sifre').checked = false; toggleSifre(); }
+}
+function toggleSeed() {
+  document.getElementById('seed-field').style.display =
+    document.getElementById('enc-use-seed').checked ? 'block' : 'none';
+}
+function toggleDecodeSifre() {
+  const on = document.getElementById('dec-use-sifre').checked;
+  document.getElementById('dec-sifre-field').style.display = on ? 'block' : 'none';
+  if (on) { document.getElementById('dec-use-parola').checked = false; toggleDecodeParola(); }
+}
+function toggleDecodeParola() {
+  const on = document.getElementById('dec-use-parola').checked;
+  document.getElementById('dec-parola-field').style.display = on ? 'block' : 'none';
+  if (on) { document.getElementById('dec-use-sifre').checked = false; toggleDecodeSifre(); }
+}
+function toggleDecodeSeed() {
+  document.getElementById('dec-seed-field').style.display =
+    document.getElementById('dec-use-seed').checked ? 'block' : 'none';
+}
+
+// ══════════════════════════════════════════════
+//  RESIM YÜKLEME
+// ══════════════════════════════════════════════
+
+let encCanvas, decCanvas, kapCanvas;
+
+function loadImgToCanvas(file, callback) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement('canvas');
+      cv.width = img.width; cv.height = img.height;
+      cv.getContext('2d').drawImage(img, 0, 0);
+      callback(cv, img);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleEncImg(input) {
+  if (!input.files[0]) return;
+  const f = input.files[0];
+  loadImgToCanvas(f, (cv, img) => {
+    encCanvas = cv;
+    document.getElementById('enc-thumb').src = cv.toDataURL();
+    document.getElementById('enc-info').innerHTML =
+      `<strong>${f.name}</strong><br>${img.width}×${img.height} px<br>` +
+      `${(f.size/1024).toFixed(1)} KB<br>` +
+      `Max kapasite: <strong>${Math.floor((img.width*img.height*3-32)/8).toLocaleString()}</strong> karakter`;
+    document.getElementById('enc-preview').classList.add('show');
+  });
+}
+
+function handleDecImg(input) {
+  if (!input.files[0]) return;
+  const f = input.files[0];
+  loadImgToCanvas(f, (cv, img) => {
+    decCanvas = cv;
+    document.getElementById('dec-thumb').src = cv.toDataURL();
+    document.getElementById('dec-info').innerHTML =
+      `<strong>${f.name}</strong><br>${img.width}×${img.height} px`;
+    document.getElementById('dec-preview').classList.add('show');
+  });
+}
+
+function handleKapImg(input) {
+  if (!input.files[0]) return;
+  const f = input.files[0];
+  loadImgToCanvas(f, (cv, img) => {
+    kapCanvas = cv;
+    document.getElementById('kap-thumb').src = cv.toDataURL();
+    document.getElementById('kap-info').innerHTML =
+      `<strong>${f.name}</strong><br>${img.width}×${img.height} px`;
+    document.getElementById('kap-preview').classList.add('show');
+    calcKapasite();
+  });
+}
+
+// ══════════════════════════════════════════════
+//  KAPASİTE HESABI
+// ══════════════════════════════════════════════
+
+function calcKapasite() {
+  if (!kapCanvas) return;
+  const kanal = document.getElementById('kap-kanal').value;
+  const bit = parseInt(document.getElementById('kap-bit').value);
+  const kanalSayisi = kanal === 'all' ? 3 : 1;
+  const px = kapCanvas.width * kapCanvas.height;
+  const toplamBit = px * kanalSayisi * bit;
+  const maxChar = Math.floor((toplamBit - 32) / 8);
+  document.getElementById('kap-px').textContent = px.toLocaleString();
+  document.getElementById('kap-bit-out').textContent = toplamBit.toLocaleString();
+  document.getElementById('kap-char').textContent = maxChar.toLocaleString();
+  document.getElementById('kap-result').style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+//  LOG YARDIMCISI
+// ══════════════════════════════════════════════
+
+function log(id, msg, type='info') {
+  const el = document.getElementById(id);
+  const line = document.createElement('span');
+  line.className = 'log-line ' + type;
+  line.textContent = '> ' + msg;
+  el.appendChild(document.createElement('br'));
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog(id) {
+  document.getElementById(id).innerHTML = '';
+}
+
+// ══════════════════════════════════════════════
+//  RASTGELE PERMÜTASYON (seed ile)
+// ══════════════════════════════════════════════
+
+function seededShuffle(arr, seed) {
+  // LCG (Linear Congruential Generator) — basit ama deterministik
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  const rng = () => { s = s * 16807 % 2147483647; return (s - 1) / 2147483646; };
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ══════════════════════════════════════════════
+//  SHA-256 (parola hash)
+// ══════════════════════════════════════════════
+
+async function sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ══════════════════════════════════════════════
+//  AES-256-CBC  (Web Crypto API)
+// ══════════════════════════════════════════════
+
+async function aesEncrypt(text, password) {
+  const pwHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+  const key = await crypto.subtle.importKey('raw', pwHash, {name:'AES-CBC'}, false, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(16));
+  const enc = await crypto.subtle.encrypt({name:'AES-CBC', iv}, key, new TextEncoder().encode(text));
+  const result = new Uint8Array(16 + enc.byteLength);
+  result.set(iv);
+  result.set(new Uint8Array(enc), 16);
+  return result;
+}
+
+async function aesDecrypt(data, password) {
+  const pwHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+  const key = await crypto.subtle.importKey('raw', pwHash, {name:'AES-CBC'}, false, ['decrypt']);
+  const iv = data.slice(0, 16);
+  const enc = data.slice(16);
+  const dec = await crypto.subtle.decrypt({name:'AES-CBC', iv}, key, enc);
+  return new TextDecoder().decode(dec);
+}
+
+// ══════════════════════════════════════════════
+//  YARDIMCI: bytes <-> binary string
+// ══════════════════════════════════════════════
+
+function bytesToBin(bytes) {
+  return Array.from(bytes).map(b => b.toString(2).padStart(8,'0')).join('');
+}
+
+function binToBytes(bin) {
+  const bytes = [];
+  for (let i = 0; i < bin.length; i += 8)
+    bytes.push(parseInt(bin.slice(i, i+8), 2));
+  return new Uint8Array(bytes);
+}
+
+function strToBin(str) {
+  return Array.from(new TextEncoder().encode(str)).map(b => b.toString(2).padStart(8,'0')).join('');
+}
+
+function binToStr(bin) {
+  const bytes = binToBytes(bin);
+  return new TextDecoder().decode(bytes);
+}
+
+// ══════════════════════════════════════════════
+//  ENCODE
+// ══════════════════════════════════════════════
+
+async function doEncode() {
+  if (!encCanvas) return alert('Önce bir resim yükle!');
+  const mesaj = document.getElementById('enc-msg').value;
+  if (!mesaj) return alert('Mesaj boş olamaz!');
+
+  clearLog('enc-log');
+  document.getElementById('enc-download').classList.remove('show');
+  log('enc-log', 'Encode başlıyor...', 'ok');
+
+  const useSifre  = document.getElementById('enc-use-sifre').checked;
+  const useParola = document.getElementById('enc-use-parola').checked;
+  const useSeed   = document.getElementById('enc-use-seed').checked;
+  const kanal     = document.getElementById('enc-kanal').value;
+  const bitDepth  = parseInt(document.getElementById('enc-bit').value);
+  const outName   = document.getElementById('enc-outname').value || 'gizli_resim';
+
+  let veriBytes;
+
+  try {
+    if (useSifre) {
+      const pw = document.getElementById('enc-sifre').value;
+      if (!pw) return alert('AES parolası boş olamaz!');
+      log('enc-log', 'AES-256 şifreleme uygulanıyor...', 'info');
+      veriBytes = await aesEncrypt(mesaj, pw);
+      log('enc-log', `AES tamamlandı. Şifreli boyut: ${veriBytes.length} byte`, 'ok');
+    } else if (useParola) {
+      const pw = document.getElementById('enc-parola').value;
+      if (!pw) return alert('Parola boş olamaz!');
+      const hash = await sha256hex(pw);
+      const birlesik = hash + '||' + mesaj;
+      veriBytes = new TextEncoder().encode(birlesik);
+      log('enc-log', 'Parola hash koruması eklendi.', 'ok');
+    } else {
+      veriBytes = new TextEncoder().encode(mesaj);
+      log('enc-log', 'Güvensiz mod (şifreleme yok).', 'dim');
+    }
+  } catch(e) {
+    log('enc-log', 'Hata: ' + e.message, 'err'); return;
+  }
+
+  const veriBin = bytesToBin(veriBytes);
+  const uzunlukBin = veriBin.length.toString(2).padStart(32, '0');
+  const toplamBin = uzunlukBin + veriBin;
+
+  const ctx = encCanvas.getContext('2d');
+  const imgData = ctx.getImageData(0, 0, encCanvas.width, encCanvas.height);
+  const pixels = imgData.data; // RGBA düz dizi
+
+  // kanal indeksleri
+  const kanalIdx = kanal === 'all' ? [0,1,2] : kanal === 'r' ? [0] : kanal === 'g' ? [1] : [2];
+
+  // piksel sırası
+  const pixCount = encCanvas.width * encCanvas.height;
+  let siralama = Array.from({length: pixCount}, (_, i) => i);
+  if (useSeed) {
+    const seed = parseInt(document.getElementById('enc-seed').value) || 42;
+    siralama = seededShuffle(siralama, seed);
+    log('enc-log', `Seed ${seed} ile piksel sırası karıştırıldı.`, 'info');
+  }
+
+  // kapasite kontrolü
+  const kapasite = pixCount * kanalIdx.length * bitDepth;
+  if (toplamBin.length > kapasite) {
+    log('enc-log', `HATA: Resim yeterince büyük değil! Gerekli: ${toplamBin.length} bit, Mevcut: ${kapasite} bit`, 'err');
+    return;
+  }
+
+  log('enc-log', `Gömülecek bit sayısı: ${toplamBin.length} / ${kapasite}`, 'dim');
+
+  // gömme
+  const maske = 0xFF ^ ((1 << bitDepth) - 1);
+  let bitIdx = 0;
+
+  const prog = document.getElementById('enc-fill');
+  document.getElementById('enc-progress').classList.add('show');
+
+  const step = Math.max(1, Math.floor(siralama.length / 100));
+
+  for (let pi = 0; pi < siralama.length; pi++) {
+    if (bitIdx >= toplamBin.length) break;
+    const px = siralama[pi];
+    for (const k of kanalIdx) {
+      if (bitIdx >= toplamBin.length) break;
+      const parca = toplamBin.slice(bitIdx, bitIdx + bitDepth).padEnd(bitDepth, '0');
+      const deger = parseInt(parca, 2);
+      pixels[px * 4 + k] = (pixels[px * 4 + k] & maske) | deger;
+      bitIdx += bitDepth;
+    }
+    if (pi % step === 0) prog.style.width = Math.round(pi / siralama.length * 100) + '%';
+  }
+
+  prog.style.width = '100%';
+
+  ctx.putImageData(imgData, 0, 0);
+
+  // indir
+  encCanvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const link = document.getElementById('enc-dl-link');
+    link.href = url;
+    link.download = outName + '.png';
+    link.textContent = `⬇ ${outName}.png — İndir`;
+    document.getElementById('enc-download').classList.add('show');
+    log('enc-log', `✓ Tamamlandı! Kapasite kullanımı: %${(toplamBin.length/kapasite*100).toFixed(2)}`, 'ok');
+  }, 'image/png');
+}
+
+// ══════════════════════════════════════════════
+//  DECODE
+// ══════════════════════════════════════════════
+
+async function doDecode() {
+  if (!decCanvas) return alert('Önce bir resim yükle!');
+  clearLog('dec-log');
+  document.getElementById('dec-output').classList.remove('show');
+  log('dec-log', 'Decode başlıyor...', 'ok');
+
+  const useSifre  = document.getElementById('dec-use-sifre').checked;
+  const useParola = document.getElementById('dec-use-parola').checked;
+  const useSeed   = document.getElementById('dec-use-seed').checked;
+  const kanal     = document.getElementById('dec-kanal').value;
+  const bitDepth  = parseInt(document.getElementById('dec-bit').value);
+
+  const ctx = decCanvas.getContext('2d');
+  const imgData = ctx.getImageData(0, 0, decCanvas.width, decCanvas.height);
+  const pixels = imgData.data;
+
+  const kanalIdx = kanal === 'all' ? [0,1,2] : kanal === 'r' ? [0] : kanal === 'g' ? [1] : [2];
+  const pixCount = decCanvas.width * decCanvas.height;
+  let siralama = Array.from({length: pixCount}, (_, i) => i);
+
+  if (useSeed) {
+    const seed = parseInt(document.getElementById('dec-seed').value) || 42;
+    siralama = seededShuffle(siralama, seed);
+    log('dec-log', `Seed ile aynı sıra yeniden oluşturuldu.`, 'info');
+  }
+
+  const maske = (1 << bitDepth) - 1;
+  let bitler = '';
+
+  // ilk 32 bit = uzunluk
+  let bitIdx = 0;
+  for (let pi = 0; pi < siralama.length && bitIdx < 32; pi++) {
+    const px = siralama[pi];
+    for (const k of kanalIdx) {
+      if (bitIdx >= 32) break;
+      const val = pixels[px * 4 + k] & maske;
+      bitler += val.toString(2).padStart(bitDepth, '0');
+      bitIdx += bitDepth;
+    }
+  }
+
+  const uzunluk = parseInt(bitler.slice(0, 32), 2);
+  log('dec-log', `Uzunluk başlığı okundu: ${uzunluk} bit`, 'dim');
+
+  if (uzunluk <= 0 || uzunluk > pixCount * kanalIdx.length * bitDepth) {
+    log('dec-log', 'HATA: Geçersiz uzunluk. Yanlış parametreler veya gömülü mesaj yok.', 'err');
+    return;
+  }
+
+  // asıl veri bitleri
+  bitler = '';
+  bitIdx = 0;
+  const hedef = 32 + uzunluk;
+  let okunan = 0;
+
+  for (let pi = 0; pi < siralama.length && okunan < hedef; pi++) {
+    const px = siralama[pi];
+    for (const k of kanalIdx) {
+      if (okunan >= hedef) break;
+      const val = pixels[px * 4 + k] & maske;
+      bitler += val.toString(2).padStart(bitDepth, '0');
+      okunan += bitDepth;
+    }
+  }
+
+  const veriBin = bitler.slice(32, 32 + uzunluk);
+  const veriBytes = binToBytes(veriBin);
+
+  try {
+    let mesaj;
+    if (useSifre) {
+      const pw = document.getElementById('dec-sifre').value;
+      if (!pw) return alert('AES parolası boş olamaz!');
+      log('dec-log', 'AES çözülüyor...', 'info');
+      mesaj = await aesDecrypt(veriBytes, pw);
+      log('dec-log', 'AES şifresi başarıyla çözüldü.', 'ok');
+    } else if (useParola) {
+      const pw = document.getElementById('dec-parola').value;
+      if (!pw) return alert('Parola boş olamaz!');
+      const birlesik = new TextDecoder().decode(veriBytes);
+      if (!birlesik.includes('||')) {
+        log('dec-log', 'HATA: Parola korumalı değil veya yanlış parametreler.', 'err'); return;
+      }
+      const [kayitliHash, ...rest] = birlesik.split('||');
+      const hash = await sha256hex(pw);
+      if (hash !== kayitliHash) {
+        log('dec-log', 'HATA: Yanlış parola!', 'err'); return;
+      }
+      mesaj = rest.join('||');
+      log('dec-log', 'Parola doğrulandı.', 'ok');
+    } else {
+      mesaj = new TextDecoder().decode(veriBytes);
+    }
+
+    document.getElementById('dec-msg-box').textContent = mesaj;
+    document.getElementById('dec-output').classList.add('show');
+    log('dec-log', `✓ Mesaj başarıyla çıkarıldı. (${mesaj.length} karakter)`, 'ok');
+  } catch(e) {
+    log('dec-log', 'HATA: ' + e.message + ' — Yanlış parola veya bozuk veri olabilir.', 'err');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  AI CHAT
+// ══════════════════════════════════════════════
+
+let chatHistory = [];
+let groqApiKey = 'buraya alacağın grok apı key yaz';
+
+const SYSTEM_MSG = `Sen CyberWordAI'sın. Hamza Hack Team tarafından geliştirildin. Türkçe konuşuyorsun, her zaman Türkçe cevap veriyorsun.
+
+Senin tek amacın ShadowPixel uygulamasını anlatmak ve LSB steganografi konusunda yardım etmek.
+
+ShadowPixel Hakkında Tam Bilgi:
+================================
+
+ShadowPixel, LSB (Least Significant Bit) yöntemini kullanan bir steganografi aracıdır.
+Her pikselin R, G, B kanallarının son 1-2 bitine mesaj gizler. İnsan gözü farkı göremez.
+
+Parametreler:
+- --sifre: AES-256-CBC şifreleme. Mesajı gömmeden önce şifreler. Web Crypto API kullanır.
+  Parola → SHA-256 → 32 byte anahtar. Rastgele IV (16 byte) başa eklenir. En güçlü koruma.
+  Decode için aynı parola gerekir.
+
+- --parola: SHA-256 hash kilitleme. Mesajı şifrelemez, başına parola hash'i (64 hex) + "||" ayırıcısı ekler.
+  Decode'da parola hash'i karşılaştırılır. AES kadar güçlü değil ama kurulum gerektirmez.
+
+- --seed: Rastgele piksel dağılımı. LCG (Linear Congruential Generator) kullanır.
+  Aynı seed her zaman aynı piksel sırasını üretir. Encode ve decode'da aynı seed kullanılmalı.
+  Seed bilinmeden mesajı bulmak çok zordur.
+
+- --kanal (r/g/b/hepsi): Hangi renk kanalına gömüleceği. Sadece G kanalı önerilir (göze en az fark eder).
+  Hepsi seçilirse piksel başına 3 bit, tek kanal 1 bit kapasite.
+
+- --bit (1/2): Bit derinliği. 1 bit = son 1 bit değişir (fark edilmez). 2 bit = son 2 bit = 2x kapasite.
+
+Uzunluk başlığı: Mesajın başına 32 bit uzunluk bilgisi gömülür. Decode'da bu okunarak kaç bit alınacağı belirlenir.
+
+Kapasite formülü: (piksel sayısı × kanal_sayısı × bit_derinliği - 32) ÷ 8 = max karakter
+
+Encode adımları:
+1. Resim yükle → RGBA piksel dizisi
+2. Mesajı opsiyonel olarak AES şifrele veya parola hash'i ekle
+3. Bytes → binary stringe çevir
+4. Başına 32 bit uzunluk ekle
+5. Seed varsa piksel sırasını karıştır
+6. Her seçilen kanalın son N bitine bit yaz (maske: & 0xFE | bit)
+7. PNG olarak kaydet (JPEG sıkıştırır, veriler bozulur!)
+
+Decode adımları:
+1. Resim yükle
+2. Aynı seed varsa aynı sırayı oluştur
+3. İlk 32 bit → uzunluk
+4. O kadar bit daha oku → veri binary
+5. AES çöz veya parola doğrula
+6. Binary → bytes → metin
+
+Arkadaşça, samimi, teknik konularda net ve adım adım açıklıyorsun. Gereksiz uzun cevap verme.`;
+
+function saveApiKey() {
+  const key = document.getElementById('ai-apikey').value.trim();
+  if (!key.startsWith('gsk_')) {
+    document.getElementById('api-status').textContent = '✗ Geçersiz key formatı (gsk_ ile başlamalı)';
+    document.getElementById('api-status').style.color = 'var(--red)';
+    return;
+  }
+  groqApiKey = key;
+  document.getElementById('api-status').textContent = '✓ API key kaydedildi';
+  document.getElementById('api-status').style.color = 'var(--green)';
+}
+
+function quickAsk(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  if (!groqApiKey) { alert('Önce Groq API key gir ve Kaydet butonuna bas!'); return; }
+
+  input.value = '';
+  appendChatMsg('user', msg);
+  chatHistory.push({role: 'user', content: msg});
+
+  document.getElementById('chat-send-btn').disabled = true;
+  document.getElementById('typing-indicator').classList.add('show');
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + groqApiKey
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        temperature: 0.5,
+        max_tokens: 600,
+        messages: [
+          {role: 'system', content: SYSTEM_MSG},
+          ...chatHistory
+        ]
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error.message);
+
+    const reply = data.choices[0].message.content;
+    chatHistory.push({role: 'assistant', content: reply});
+    appendChatMsg('ai', reply);
+  } catch(e) {
+    appendChatMsg('ai', '✗ Hata: ' + e.message);
+  } finally {
+    document.getElementById('chat-send-btn').disabled = false;
+    document.getElementById('typing-indicator').classList.remove('show');
+  }
+}
+
+function appendChatMsg(role, text) {
+  const win = document.getElementById('chat-window');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  if (role === 'ai') {
+    div.innerHTML = '<span class="ai-prefix">CYBERWORDAI // HAMZA HACK TEAM</span>' +
+      text.replace(/\n/g, '<br>');
+  } else {
+    div.textContent = text;
+  }
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+</script>
+</body>
+</html>
